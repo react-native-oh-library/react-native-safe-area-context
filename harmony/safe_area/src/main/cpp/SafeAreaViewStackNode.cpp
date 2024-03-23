@@ -46,7 +46,7 @@ namespace rnoh {
 
     void SafeAreaViewStackNode::insertChild(ArkUINode &child, std::size_t index) {
         if (m_stackArkUINodeHandle != nullptr) {
-            maybeThrow(NativeNodeApi::getInstance()->addChild(m_stackArkUINodeHandle, child.getArkUINodeHandle()));
+            maybeThrow(NativeNodeApi::getInstance()->insertChildAt(m_stackArkUINodeHandle, child.getArkUINodeHandle(), index));
         }
     }
 
@@ -73,5 +73,19 @@ namespace rnoh {
         return *this;
     }
 
-    
+    void SafeAreaViewStackNode::setHeight(float_t height) {
+        LOG(INFO) << "[clx] <SafeAreaViewComponentInstance::setProps> edges.left: RNCSafeAreaViewMode::setHeight";
+        ArkUI_NumberValue heightValue[] = {height};
+        ArkUI_AttributeItem heightItem = {heightValue, sizeof(heightValue) / sizeof(ArkUI_NumberValue)};
+        maybeThrow(NativeNodeApi::getInstance()->setAttribute(m_stackArkUINodeHandle, NODE_HEIGHT, &heightItem));
+    }
+
+    void SafeAreaViewStackNode::setWidth(float_t width) {
+        LOG(INFO) << "[clx] <SafeAreaViewComponentInstance::setProps> edges.left: RNCSafeAreaViewMode::setWidth";
+        ArkUI_NumberValue widthValue[] = {width};
+        ArkUI_AttributeItem widthItem = {widthValue, sizeof(widthValue) / sizeof(ArkUI_NumberValue)};
+        maybeThrow(NativeNodeApi::getInstance()->setAttribute(m_stackArkUINodeHandle, NODE_WIDTH, &widthItem));
+    }
+
+
 } // namespace rnoh

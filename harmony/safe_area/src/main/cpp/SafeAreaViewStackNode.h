@@ -40,6 +40,8 @@ namespace rnoh {
         void removeChild(ArkUINode &child);
         SafeAreaViewStackNode &contentSetMargin(safeArea::EdgeInsets const &);
         SafeAreaViewStackNode &contentSetPadding(safeArea::EdgeInsets const &);
+        void setHeight(float_t height);
+        void setWidth(float_t width);
     };
 
 } // namespace rnoh

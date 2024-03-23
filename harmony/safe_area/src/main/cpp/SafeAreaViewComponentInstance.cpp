@@ -65,8 +65,14 @@ namespace rnoh {
             TurboModuleRequest request;
             safeArea::Event data = request.getTurboModuleData(this->m_context);
             safeArea::EdgeInsets edgesData;
-            float_t rawPadding = p->rawProps["padding"].asInt();
-            float_t rawMargin = p->rawProps["margin"].asInt();
+            float_t rawPadding = 0;
+            float_t rawMargin = 0;
+            if (p->rawProps.get_ptr("padding") != nullptr) {
+                rawPadding = p->rawProps["padding"].asInt();
+            }
+            if (p->rawProps.get_ptr("margin") != nullptr) {
+                rawMargin = p->rawProps["margin"].asInt();
+            }
             safeArea::EdgeInsets marginInsets = {rawMargin, rawMargin, rawMargin, rawMargin};
             safeArea::EdgeInsets paddingInsets = {rawPadding, rawPadding, rawPadding, rawPadding};
             if (std::strcmp(to_string(p->mode).c_str(), "MARGIN") == 0) {
@@ -113,8 +119,16 @@ namespace rnoh {
             LOG(INFO) << "[clx] <SafeAreaViewComponentInstance::setProps> edges.top: " << p->edges.top;
             LOG(INFO) << "[clx] <SafeAreaViewComponentInstance::setProps> edges.bottom: " << p->edges.bottom;
             LOG(INFO) << "[clx] <SafeAreaViewComponentInstance::setProps> mode: " << to_string(p->mode);
-            LOG(INFO) << "[clx] <SafeAreaViewComponentInstance::setProps> padding: " << p->rawProps["padding"].asInt();
-            LOG(INFO) << "[clx] <SafeAreaViewComponentInstance::setProps> padding: " << p->rawProps["margin"].asInt();
+            if (props->rawProps.get_ptr("padding") != nullptr) {
+                LOG(INFO) << "[clx] <SafeAreaViewComponentInstance::setProps> padding: "
+                          << props->rawProps["padding"].asInt();
+            }
+            if (props->rawProps.get_ptr("margin") != nullptr) {
+                LOG(INFO) << "[clx] <SafeAreaViewComponentInstance::setProps> margin: "
+                          << props->rawProps["margin"].asInt();
+            }
+            this->getLocalRootArkUINode().setHeight(m_layoutMetrics.frame.size.height);
+            this->getLocalRootArkUINode().setWidth(m_layoutMetrics.frame.size.width);
             updateInsert(props);
         }
     }
