@@ -31,7 +31,13 @@ static jsi::Value __hostFunction_RNCSafeAreaContextTurbomodule_getConstants(jsi:
                                                                             react::TurboModule &turboModule,
                                                                             const jsi::Value *args, size_t count)
 {
-    return static_cast<ArkTSTurboModule &>(turboModule).call(rt, "getConstants", args, count);
+    return static_cast<ArkTSTurboModule &>(turboModule).callAsync(rt, "getConstants", args, count);
+}
+
+static jsi::Value __hostFunction_RNCSafeAreaContextTurbomodule_getSafeArea(jsi::Runtime &rt,
+                                                                            react::TurboModule &turboModule,
+                                                                            const jsi::Value *args, size_t count) {
+    return static_cast<ArkTSTurboModule &>(turboModule).call(rt, "getSafeArea", args, count);
 }
 
 RNCSafeAreaContextTurbomodule::RNCSafeAreaContextTurbomodule(const ArkTSTurboModule::Context ctx,
@@ -39,4 +45,5 @@ RNCSafeAreaContextTurbomodule::RNCSafeAreaContextTurbomodule(const ArkTSTurboMod
     : ArkTSTurboModule(ctx, name)
 {
     methodMap_["getConstants"] = MethodMetadata{0, __hostFunction_RNCSafeAreaContextTurbomodule_getConstants};
+    methodMap_["getSafeArea"] = MethodMetadata{0, __hostFunction_RNCSafeAreaContextTurbomodule_getSafeArea};
 }

@@ -46,7 +46,44 @@ export class SafeAreaViewTurboModule extends TurboModule {
     console.log(TAG, '[RNOH]:SafeAreaViewTurboModule constructor');
   }
 
-  getConstants():{} {
+  async getConstants():Promise<Event> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const windowInstance = await window.getLastWindow(this.ctx.uiAbilityContext);
+        const windowInfo = windowInstance.getWindowProperties()
+        console.log(TAG, JSON.stringify(windowInfo));
+        const frame: Frame = {
+          x: px2vp(windowInfo.windowRect.left),
+          y: px2vp(windowInfo.windowRect.top),
+          width: px2vp(windowInfo.windowRect.width),
+          height: px2vp(windowInfo.windowRect.height)
+        }
+        if (!windowInfo.isLayoutFullScreen) {
+          const insets: EdgeInsets = {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+          }
+          resolve({ insets, frame })
+        } else {
+          let type = window.AvoidAreaType.TYPE_SYSTEM;
+          let avoidArea = windowInstance.getWindowAvoidArea(type);
+          const insets: EdgeInsets = {
+            top: px2vp(avoidArea.topRect.height),
+            right: px2vp(avoidArea.rightRect.height),
+            bottom: px2vp(avoidArea.bottomRect.height),
+            left: px2vp(avoidArea.leftRect.height)
+          }
+          resolve({ insets, frame })
+        }
+      } catch (exception) {
+        reject(exception)
+      }
+    })
+  }
+
+  getSafeArea():{} {
     console.log(TAG, 'RNCSafeAreaContext console6666' + this.windowInstance);
     let frame: Frame = {
       x: 0,
