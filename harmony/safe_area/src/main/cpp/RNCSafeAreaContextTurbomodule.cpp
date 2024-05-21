@@ -27,17 +27,17 @@
 using namespace rnoh;
 using namespace facebook;
 
-static jsi::Value __hostFunction_RNCSafeAreaContextTurbomodule_getConstants(jsi::Runtime &rt,
+static jsi::Value __hostFunction_RNCSafeAreaContextTurbomodule_getConstantsAsync(jsi::Runtime &rt,
                                                                             react::TurboModule &turboModule,
                                                                             const jsi::Value *args, size_t count)
 {
-    return static_cast<ArkTSTurboModule &>(turboModule).callAsync(rt, "getConstants", args, count);
+    return static_cast<ArkTSTurboModule &>(turboModule).callAsync(rt, "getConstantsAsync", args, count);
 }
 
-static jsi::Value __hostFunction_RNCSafeAreaContextTurbomodule_getSafeArea(jsi::Runtime &rt,
+static jsi::Value __hostFunction_RNCSafeAreaContextTurbomodule_getConstants(jsi::Runtime &rt,
                                                                             react::TurboModule &turboModule,
                                                                             const jsi::Value *args, size_t count) {
-    return static_cast<ArkTSTurboModule &>(turboModule).call(rt, "getSafeArea", args, count);
+    return static_cast<ArkTSTurboModule &>(turboModule).call(rt, "getConstants", args, count);
 }
 
 RNCSafeAreaContextTurbomodule::RNCSafeAreaContextTurbomodule(const ArkTSTurboModule::Context ctx,
@@ -45,5 +45,5 @@ RNCSafeAreaContextTurbomodule::RNCSafeAreaContextTurbomodule(const ArkTSTurboMod
     : ArkTSTurboModule(ctx, name)
 {
     methodMap_["getConstants"] = MethodMetadata{0, __hostFunction_RNCSafeAreaContextTurbomodule_getConstants};
-    methodMap_["getSafeArea"] = MethodMetadata{0, __hostFunction_RNCSafeAreaContextTurbomodule_getSafeArea};
+    methodMap_["getConstantsAsync"] = MethodMetadata{0, __hostFunction_RNCSafeAreaContextTurbomodule_getConstantsAsync};
 }

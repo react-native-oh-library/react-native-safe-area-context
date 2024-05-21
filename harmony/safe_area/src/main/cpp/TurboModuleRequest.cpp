@@ -31,7 +31,7 @@ safeArea::Event TurboModuleRequest::getTurboModuleData(rnoh::ComponentInstance::
     if (rnInstancePtr != nullptr) {
         auto turboModule = rnInstancePtr->getTurboModule("RNCSafeAreaContext");
         auto arkTsTurboModule = std::dynamic_pointer_cast<rnoh::ArkTSTurboModule>(turboModule);
-        result1 = arkTsTurboModule->callSync("getSafeArea", {});
+        result1 = arkTsTurboModule->callSync("getConstants", {});
         LOG(INFO) << "[clx] <SafeAreaViewComponentInstance::setProps> initialWindowMetrics: x:"
                   << result1["initialWindowMetrics"]["frame"]["x"].asDouble();
         LOG(INFO) << "[clx] <SafeAreaViewComponentInstance::setProps> initialWindowMetrics: y:"

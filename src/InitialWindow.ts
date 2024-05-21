@@ -1,7 +1,7 @@
 import type { EdgeInsets, Metrics } from './SafeArea.types';
 
-export const initialWindowMetrics: Promise<Metrics> | null = null;
-
+export const initialWindowMetricsAsync: Promise<Metrics> | null = null;
+export const initialWindowMetrics: Metrics | null = null;
 /**
  * @deprecated
  */
