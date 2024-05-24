@@ -83,6 +83,7 @@ namespace rnoh {
                                        getEdgeValue(edges.right, data.insets.right, edgesData.right),
                                        getEdgeValue(edges.bottom, data.insets.bottom, edgesData.bottom),
                                        getEdgeValue(edges.left, data.insets.left, edgesData.left)};
+        safeAreaTop = insets.top;
         safeArea::EdgeInsets zeroEdgeInsets = {0, 0, 0, 0};
         if (std::strcmp(to_string(p->mode).c_str(), "MARGIN") == 0) {
             m_safeAreaViewStackNode.setMargin(insets.left, insets.top, insets.right, insets.bottom);
@@ -91,6 +92,10 @@ namespace rnoh {
             m_safeAreaViewStackNode.setMargin(zeroEdgeInsets.left, zeroEdgeInsets.top, zeroEdgeInsets.right, zeroEdgeInsets.bottom);
             contentSetPadding(insets);
         }
+    }
+
+    facebook::react::Point SafeAreaViewComponentInstance::getCurrentOffset() const {
+        return {0, 0 - safeAreaTop};
     }
 
     void SafeAreaViewComponentInstance::contentSetPadding(const safeArea::EdgeInsets edgeInsets) {
