@@ -11,7 +11,9 @@ SafeAreaStackNode::SafeAreaStackNode()
           ArkUI_NodeType::ARKUI_NODE_STACK)),
       m_stackNodeDelegate(nullptr) {
   maybeThrow(NativeNodeApi::getInstance()->registerNodeEvent(
-      m_nodeHandle, NODE_ON_CLICK, 0, this));
+      m_nodeHandle, NODE_ON_CLICK, NODE_ON_CLICK, this));
+ maybeThrow(NativeNodeApi::getInstance()->registerNodeEvent(
+      m_nodeHandle, NODE_EVENT_ON_APPEAR, NODE_EVENT_ON_APPEAR, this));   
 }
 
 void SafeAreaStackNode::insertChild(ArkUINode& child, std::size_t index) {
@@ -35,6 +37,13 @@ void SafeAreaStackNode::onNodeEvent(
       eventArgs[3].i32 != 2) {
     onClick();
   }
+ 
+  if (eventType == ArkUI_NodeEventType::NODE_EVENT_ON_APPEAR) {
+      if(m_stackNodeDelegate != nullptr) {
+         m_stackNodeDelegate->onAppear();
+      }
+  }
+    
 }
 
 void SafeAreaStackNode::onClick() {
@@ -46,6 +55,8 @@ void SafeAreaStackNode::onClick() {
 SafeAreaStackNode::~SafeAreaStackNode() {
   NativeNodeApi::getInstance()->unregisterNodeEvent(
       m_nodeHandle, NODE_ON_CLICK);
+    NativeNodeApi::getInstance()->unregisterNodeEvent(
+      m_nodeHandle, NODE_EVENT_ON_APPEAR);
 }
 
 SafeAreaStackNode& SafeAreaStackNode::setAlign(int32_t align) {
