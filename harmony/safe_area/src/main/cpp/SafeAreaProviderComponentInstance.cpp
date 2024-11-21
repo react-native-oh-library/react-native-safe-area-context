@@ -29,23 +29,23 @@
 namespace rnoh {
 
     SafeAreaProviderComponentInstance::SafeAreaProviderComponentInstance(Context context)
-        : CppComponentInstance(std::move(context)) {}
+        : BaseRNCSafeAreaProviderComponentInstance(std::move(context)) {}
 
     void SafeAreaProviderComponentInstance::onChildInserted(ComponentInstance::Shared const &childComponentInstance,
                                                             std::size_t index) {
-        CppComponentInstance::onChildInserted(childComponentInstance, index);
+        super::onChildInserted(childComponentInstance, index);
         m_stackNode.insertChild(childComponentInstance->getLocalRootArkUINode(), index);
     }
 
     void SafeAreaProviderComponentInstance::onChildRemoved(ComponentInstance::Shared const &childComponentInstance) {
-        CppComponentInstance::onChildRemoved(childComponentInstance);
+        super::onChildRemoved(childComponentInstance);
         m_stackNode.removeChild(childComponentInstance->getLocalRootArkUINode());
     };
 
     SafeAreaStackNode &SafeAreaProviderComponentInstance::getLocalRootArkUINode() { return m_stackNode; }
 
     void SafeAreaProviderComponentInstance::onPropsChanged(SharedConcreteProps const &props) {
-        CppComponentInstance::onPropsChanged(props);
+        super::onPropsChanged(props);
     }
 
     void SafeAreaProviderComponentInstance::onEventEmitterChanged(SharedConcreteEventEmitter const &eventEmitter) {

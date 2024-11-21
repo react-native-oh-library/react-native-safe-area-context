@@ -24,10 +24,13 @@
 #pragma once
 #include "RNOH/CppComponentInstance.h"
 #include "SafeAreaStackNode.h"
-#include "ShadowNodes.h"
-
+#include "generated/RNOH/generated/components/BaseRNCSafeAreaProviderComponentInstance.h"
+#include "generated/react/renderer/components/react_native_safe_area_context/EventEmitters.h"
 namespace rnoh {
-    class SafeAreaProviderComponentInstance : public CppComponentInstance<facebook::react::RNCSafeAreaProviderShadowNode> {
+    class SafeAreaProviderComponentInstance : public BaseRNCSafeAreaProviderComponentInstance {
+    
+    using super = BaseRNCSafeAreaProviderComponentInstance;
+
     private:
         SafeAreaStackNode m_stackNode;
     public:

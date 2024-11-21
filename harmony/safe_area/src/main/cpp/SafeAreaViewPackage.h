@@ -23,18 +23,14 @@
  */
 
 #include "RNOH/Package.h"
-#include "RNCSafeAreaContextTurbomodule.h"
-#include "ComponentDescriptors.h"
-#include "RNCSafeAreaViewJSIBinder.h"
-#include "RNCSafeAreaProviderJSIBinder.h"
-#include "RNCSafeAreaViewNapiBinder.h"
-#include "RNCSafeAreaProviderNapiBinder.h"
-#include "SafeAreaEventEmitRequestHandler.h"
-#include "SafeAreaProviderComponentInstance.h"
+#include "generated/RNOH/generated/BaseReactNativeSafeAreaContextPackage.h"
 #include "SafeAreaViewComponentInstance.h"
+#include "SafeAreaProviderComponentInstance.h"
 
 using namespace rnoh;
 using namespace facebook;
+
+namespace rnoh {
 
 class SafeAreaPackageComponentInstanceFactoryDelegate : public ComponentInstanceFactoryDelegate {
 public:
@@ -50,55 +46,15 @@ public:
     }
 };
 
-class RNCSafeAreaContextFactoryDelegate : public TurboModuleFactoryDelegate {
-public:
-    SharedTurboModule createTurboModule(Context ctx, const std::string &name) const override
-    {
-        if (name == "RNCSafeAreaContext") {
-            return std::make_shared<RNCSafeAreaContextTurbomodule>(ctx, name);
-        }
-        return nullptr;
-    };
-};
+    class SafeAreaViewPackage : public BaseReactNativeSafeAreaContextPackage {
+        using Super = BaseReactNativeSafeAreaContextPackage;
 
-namespace rnoh {
-
-    class SafeAreaViewPackage : public Package {
     public:
-        SafeAreaViewPackage(Package::Context ctx) : Package(ctx) {}
-
+        SafeAreaViewPackage(Package::Context ctx) : Super(ctx) {}
+    
         ComponentInstanceFactoryDelegate::Shared createComponentInstanceFactoryDelegate() override {
             return std::make_shared<SafeAreaPackageComponentInstanceFactoryDelegate>();
         }
 
-        std::unique_ptr<TurboModuleFactoryDelegate> createTurboModuleFactoryDelegate() override
-        {
-            return std::make_unique<RNCSafeAreaContextFactoryDelegate>();
-        }
-    
-        std::vector<facebook::react::ComponentDescriptorProvider> createComponentDescriptorProviders() override
-        {
-            return {facebook::react::concreteComponentDescriptorProvider<
-                        facebook::react::RNCSafeAreaProviderComponentDescriptor>(),
-                    facebook::react::concreteComponentDescriptorProvider<
-                        facebook::react::RNCSafeAreaViewComponentDescriptor>()};
-        }
-
-        ComponentJSIBinderByString createComponentJSIBinderByName() override
-        {
-            return {{"RNCSafeAreaProvider", std::make_shared<RNCSafeAreaProviderJSIBinder>()},
-                    {"RNCSafeAreaView", std::make_shared<RNCSafeAreaViewJSIBinder>()}};
-        };
-
-        ComponentNapiBinderByString createComponentNapiBinderByName() override
-        {
-            return {{"RNCSafeAreaProvider", std::make_shared<RNCSafeAreaProviderNapiBinder>()},
-                    {"RNCSafeAreaView", std::make_shared<RNCSafeAreaViewNapiBinder>()}};
-        };
-
-        EventEmitRequestHandlers createEventEmitRequestHandlers() override
-        {
-            return {std::make_shared<SafeAreaEventEmitRequestHandler>()};
-        }
     };
 } // namespace rnoh
