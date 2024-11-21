@@ -27,11 +27,14 @@
 #include "SafeAreaColumnNode.h"
 #include "SafeAreaStackNode.h"
 #include "ShadowNodes.h"
+#include "SafeAreaProviderComponentInstance.h"
 
 namespace rnoh {
-    class SafeAreaViewComponentInstance : public CppComponentInstance<facebook::react::RNCSafeAreaViewShadowNode> {
+    class SafeAreaViewComponentInstance : public CppComponentInstance<facebook::react::RNCSafeAreaViewShadowNode>,SafeAreaStackNodeDelegate {
     private:
         SafeAreaStackNode m_safeAreaViewStackNode;
+        bool m_isFirstShow = true;
+        SharedConcreteProps m_SharedConcreteProps;
     public:
         SafeAreaViewComponentInstance(Context context);
 
@@ -44,5 +47,7 @@ namespace rnoh {
         SafeAreaStackNode &getLocalRootArkUINode() override;
 
         void updateInsert(SharedConcreteProps p);
+    
+        void onAppear() override;
     };
 } // namespace rnoh

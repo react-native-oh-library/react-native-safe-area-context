@@ -29,7 +29,9 @@
 namespace rnoh {
 
 SafeAreaViewComponentInstance::SafeAreaViewComponentInstance(Context context)
-    : CppComponentInstance(std::move(context)) {}
+    : CppComponentInstance(std::move(context)) {
+    m_safeAreaViewStackNode.setStackNodeDelegate(this);
+}
 
 void SafeAreaViewComponentInstance::onChildInserted(ComponentInstance::Shared const &childComponentInstance,
                                                     std::size_t index) {
@@ -45,16 +47,35 @@ void SafeAreaViewComponentInstance::onChildRemoved(ComponentInstance::Shared con
 SafeAreaStackNode &SafeAreaViewComponentInstance::getLocalRootArkUINode() { return m_safeAreaViewStackNode; }
 
 void SafeAreaViewComponentInstance::updateInsert(SharedConcreteProps p) {
-    TurboModuleRequest request;
-    safeArea::Event data = request.getTurboModuleData(this->m_deps);
-    facebook::react::RNCSafeAreaViewEventEmitter::OnInsetsChangeInsets inset = {data.insets.top, data.insets.right,
+    auto parent =std::dynamic_pointer_cast<rnoh::SafeAreaProviderComponentInstance>(this->getParent().lock());
+    if(parent) {
+        TurboModuleRequest request;
+        safeArea::Event data = request.getTurboModuleData(this->m_deps);
+        facebook::react::RNCSafeAreaViewEventEmitter::OnInsetsChangeInsets inset = {data.insets.top, data.insets.right,
                                                                                 data.insets.bottom, data.insets.left};
-    m_eventEmitter->onSafeAreaValueChange(inset);
+        m_eventEmitter->onSafeAreaValueChange(inset);
+    }
+    else {
+        facebook::react::RNCSafeAreaViewEventEmitter::OnInsetsChangeInsets inset = {0, 0, 0, 0};
+        m_eventEmitter->onSafeAreaValueChange(inset);
+    }
 }
 
 void SafeAreaViewComponentInstance::onPropsChanged(SharedConcreteProps const &props) {
     CppComponentInstance::onPropsChanged(props);
+    this->m_SharedConcreteProps = props;
+    if(this->m_isFirstShow) {
+        return;
+    }
     updateInsert(props);
 }
+
+void SafeAreaViewComponentInstance::onAppear() {
+    if(this->m_isFirstShow && this->m_SharedConcreteProps) {
+        updateInsert(this->m_SharedConcreteProps);
+        this->m_isFirstShow = false;
+    }
+}
+
 
 } // namespace rnoh

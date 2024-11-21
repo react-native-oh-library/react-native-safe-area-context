@@ -7,6 +7,7 @@ class SafeAreaStackNodeDelegate {
  public:
   virtual ~SafeAreaStackNodeDelegate() = default;
   virtual void onClick() {};
+  virtual void onAppear(){};
 };
 
 class SafeAreaStackNode : public ArkUINode {
