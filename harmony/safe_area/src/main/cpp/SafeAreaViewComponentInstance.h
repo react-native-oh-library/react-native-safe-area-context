@@ -26,11 +26,15 @@
 #include "SafeAreaBeanData.h"
 #include "SafeAreaColumnNode.h"
 #include "SafeAreaStackNode.h"
-#include "ShadowNodes.h"
 #include "SafeAreaProviderComponentInstance.h"
+#include "generated/RNOH/generated/components/BaseRNCSafeAreaViewComponentInstance.h"
+#include "generated/react/renderer/components/react_native_safe_area_context/EventEmitters.h"
 
 namespace rnoh {
-    class SafeAreaViewComponentInstance : public CppComponentInstance<facebook::react::RNCSafeAreaViewShadowNode>,SafeAreaStackNodeDelegate {
+    class SafeAreaViewComponentInstance : public BaseRNCSafeAreaViewComponentInstance,SafeAreaStackNodeDelegate {
+    
+    using super = BaseRNCSafeAreaViewComponentInstance;
+    
     private:
         SafeAreaStackNode m_safeAreaViewStackNode;
         bool m_isFirstShow = true;

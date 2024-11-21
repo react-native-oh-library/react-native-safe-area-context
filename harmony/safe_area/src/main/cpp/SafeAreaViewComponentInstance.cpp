@@ -21,26 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "RNOH/arkui/NativeNodeApi.h"
 #include "SafeAreaViewComponentInstance.h"
-#include "Props.h"
 #include "TurboModuleRequest.h"
 
 namespace rnoh {
 
 SafeAreaViewComponentInstance::SafeAreaViewComponentInstance(Context context)
-    : CppComponentInstance(std::move(context)) {
+    : BaseRNCSafeAreaViewComponentInstance(std::move(context)) {
     m_safeAreaViewStackNode.setStackNodeDelegate(this);
 }
 
 void SafeAreaViewComponentInstance::onChildInserted(ComponentInstance::Shared const &childComponentInstance,
                                                     std::size_t index) {
-    CppComponentInstance::onChildInserted(childComponentInstance, index);
+    super::onChildInserted(childComponentInstance, index);
     m_safeAreaViewStackNode.insertChild(childComponentInstance->getLocalRootArkUINode(), index);
 }
 
 void SafeAreaViewComponentInstance::onChildRemoved(ComponentInstance::Shared const &childComponentInstance) {
-    CppComponentInstance::onChildRemoved(childComponentInstance);
+    super::onChildRemoved(childComponentInstance);
     m_safeAreaViewStackNode.removeChild(childComponentInstance->getLocalRootArkUINode());
 };
 
@@ -51,18 +49,18 @@ void SafeAreaViewComponentInstance::updateInsert(SharedConcreteProps p) {
     if(parent) {
         TurboModuleRequest request;
         safeArea::Event data = request.getTurboModuleData(this->m_deps);
-        facebook::react::RNCSafeAreaViewEventEmitter::OnInsetsChangeInsets inset = {data.insets.top, data.insets.right,
+        facebook::react::RNCSafeAreaViewEventEmitter::OnSafeAreaValueChange inset = {data.insets.top, data.insets.right,
                                                                                 data.insets.bottom, data.insets.left};
         m_eventEmitter->onSafeAreaValueChange(inset);
     }
     else {
-        facebook::react::RNCSafeAreaViewEventEmitter::OnInsetsChangeInsets inset = {0, 0, 0, 0};
+        facebook::react::RNCSafeAreaViewEventEmitter::OnSafeAreaValueChange inset = {0, 0, 0, 0};
         m_eventEmitter->onSafeAreaValueChange(inset);
     }
 }
 
 void SafeAreaViewComponentInstance::onPropsChanged(SharedConcreteProps const &props) {
-    CppComponentInstance::onPropsChanged(props);
+    super::onPropsChanged(props);
     this->m_SharedConcreteProps = props;
     if(this->m_isFirstShow) {
         return;
@@ -70,7 +68,7 @@ void SafeAreaViewComponentInstance::onPropsChanged(SharedConcreteProps const &pr
     updateInsert(props);
 }
 
-void SafeAreaViewComponentInstance::onAppear() {
+void SafeAreaViewComponentInstance::onAppear(){
     if(this->m_isFirstShow && this->m_SharedConcreteProps) {
         updateInsert(this->m_SharedConcreteProps);
         this->m_isFirstShow = false;
