@@ -25,11 +25,14 @@
 #include <sys/param.h>
 #include "SafeAreaProviderComponentInstance.h"
 #include "TurboModuleRequest.h"
+#include "SafeAreaManagerMap.h"
 
 namespace rnoh {
 
     SafeAreaProviderComponentInstance::SafeAreaProviderComponentInstance(Context context)
-        : BaseRNCSafeAreaProviderComponentInstance(std::move(context)) {}
+        : BaseRNCSafeAreaProviderComponentInstance(std::move(context)) {
+            SafeAreaManagerMap::getInstance().SetHasSafeAreaProviderByNodeHandle(m_stackNode.getArkUINodeHandle(), true);
+        }
 
     void SafeAreaProviderComponentInstance::onChildInserted(ComponentInstance::Shared const &childComponentInstance,
                                                             std::size_t index) {
@@ -69,5 +72,4 @@ namespace rnoh {
         facebook::react::RNCSafeAreaProviderEventEmitter::OnInsetsChange insetsChange = {insets, frame};
         newEventEmitter->onInsetsChange(insetsChange);
     }
-
 } // namespace rnoh

@@ -35,6 +35,11 @@ namespace rnoh {
     
     using super = BaseRNCSafeAreaViewComponentInstance;
     
+    struct ParentNodeInfo {
+        ArkUI_NodeHandle nodeHandle = nullptr;
+        bool hasSafeAreaProvider = false;
+    };
+    
     private:
         SafeAreaStackNode m_safeAreaViewStackNode;
         bool m_isFirstShow = true;
@@ -53,5 +58,7 @@ namespace rnoh {
         void updateInsert(SharedConcreteProps p);
     
         void onAppear() override;
+    
+        ParentNodeInfo findParentNodeHandle(ArkUI_NodeHandle nodehandle);
     };
 } // namespace rnoh

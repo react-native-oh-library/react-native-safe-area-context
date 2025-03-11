@@ -23,6 +23,7 @@
  */
 #include "SafeAreaViewComponentInstance.h"
 #include "TurboModuleRequest.h"
+#include "SafeAreaManagerMap.h"
 
 namespace rnoh {
 
@@ -45,8 +46,9 @@ void SafeAreaViewComponentInstance::onChildRemoved(ComponentInstance::Shared con
 SafeAreaStackNode &SafeAreaViewComponentInstance::getLocalRootArkUINode() { return m_safeAreaViewStackNode; }
 
 void SafeAreaViewComponentInstance::updateInsert(SharedConcreteProps p) {
-    auto parent =std::dynamic_pointer_cast<rnoh::SafeAreaProviderComponentInstance>(this->getParent().lock());
-    if(parent) {
+    auto parentNodeHandle = findParentNodeHandle(m_safeAreaViewStackNode.getArkUINodeHandle());
+    DLOG(INFO) << "SafeAreaViewComponentInstance findParentNodeHandle " << parentNodeHandle.nodeHandle << " hasSafeAreaProvider " << parentNodeHandle.hasSafeAreaProvider;
+    if (parentNodeHandle.hasSafeAreaProvider) {
         TurboModuleRequest request;
         safeArea::Event data = request.getTurboModuleData(this->m_deps);
         facebook::react::RNCSafeAreaViewEventEmitter::OnSafeAreaValueChange inset = {data.insets.top, data.insets.right,
@@ -57,6 +59,19 @@ void SafeAreaViewComponentInstance::updateInsert(SharedConcreteProps p) {
         facebook::react::RNCSafeAreaViewEventEmitter::OnSafeAreaValueChange inset = {0, 0, 0, 0};
         m_eventEmitter->onSafeAreaValueChange(inset);
     }
+}
+
+SafeAreaViewComponentInstance::ParentNodeInfo SafeAreaViewComponentInstance::findParentNodeHandle(ArkUI_NodeHandle nodehandle) {
+    ParentNodeInfo parentNodeInfo;
+    if(!nodehandle) return parentNodeInfo;
+    auto parentNode  = OH_ArkUI_NodeUtils_GetParentInPageTree(nodehandle);
+    bool hasSafeAreaProvider =  SafeAreaManagerMap::getInstance().GetHasSafeAreaProviderByNodeHandle(parentNode);
+    parentNodeInfo.hasSafeAreaProvider = hasSafeAreaProvider;
+    parentNodeInfo.nodeHandle = parentNode;
+    if (!hasSafeAreaProvider && parentNode) {
+        return findParentNodeHandle(parentNode);
+    }
+    return parentNodeInfo;
 }
 
 void SafeAreaViewComponentInstance::onPropsChanged(SharedConcreteProps const &props) {
