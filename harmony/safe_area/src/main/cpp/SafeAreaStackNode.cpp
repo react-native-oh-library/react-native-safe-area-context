@@ -3,6 +3,7 @@
 #include <glog/logging.h>
 #include <memory>
 #include "RNOH/arkui/NativeNodeApi.h"
+#include "SafeAreaManagerMap.h"
 
 namespace rnoh {
 
@@ -57,6 +58,7 @@ SafeAreaStackNode::~SafeAreaStackNode() {
       m_nodeHandle, NODE_ON_CLICK);
     NativeNodeApi::getInstance()->unregisterNodeEvent(
       m_nodeHandle, NODE_EVENT_ON_APPEAR);
+    SafeAreaManagerMap::getInstance().RemoveSafeAreaProviderByNodeHandle(m_nodeHandle);
 }
 
 SafeAreaStackNode& SafeAreaStackNode::setAlign(int32_t align) {
