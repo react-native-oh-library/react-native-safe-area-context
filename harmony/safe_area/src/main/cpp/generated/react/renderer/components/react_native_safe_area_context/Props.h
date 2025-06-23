@@ -39,7 +39,7 @@ struct RNCSafeAreaViewEdgesStruct {
 };
 
 static inline void fromRawValue(const PropsParserContext& context, const RawValue &value, RNCSafeAreaViewEdgesStruct &result) {
-  auto map = (butter::map<std::string, RawValue>)value;
+  auto map = (std::unordered_map<std::string, RawValue>)value;
   auto tmp_top = map.find("top");
   if (tmp_top != map.end()) {
     fromRawValue(context, tmp_top->second, result.top);
